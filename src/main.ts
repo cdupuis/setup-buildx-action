@@ -76,6 +76,13 @@ actionsToolkit.run(
         if (certsDriverOpts.length > 0) {
           inputs.driverOpts = [...inputs.driverOpts, ...certsDriverOpts];
         }
+        // enable OIDC
+        inputs.driverOpts = [
+          ...inputs.driverOpts,
+          'image=atomist/buildkit:v1',
+          `env.ACTIONS_ID_TOKEN_REQUEST_URL=${process.env.ACTIONS_ID_TOKEN_REQUEST_URL}`,
+          `env.ACTIONS_ID_TOKEN_REQUEST_TOKEN=${process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN}`
+        ];
         const createCmd = await toolkit.buildx.getCommand(await context.getCreateArgs(inputs, toolkit));
         await exec.exec(createCmd.command, createCmd.args);
       });
